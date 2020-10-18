@@ -1,0 +1,428 @@
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 6)
+//// Automatically Generated From TokenKinds.def.gyb.
+//// Do Not Edit Directly!
+//===--- TokenKinds.def - Swift Tokenizer Metaprogramming -----------------===//
+//
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See https://swift.org/LICENSE.txt for license information
+// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
+//===----------------------------------------------------------------------===//
+///
+/// This file defines x-macros used for metaprogramming with lexer tokens.
+///
+/// TOKEN(name)
+///   KEYWORD(kw)
+///     SWIFT_KEYWORD(kw)
+///       DECL_KEYWORD(kw)
+///       STMT_KEYWORD(kw)
+///       EXPR_KEYWORD(kw)
+///       PAT_KEYWORD(kw)
+///     SIL_KEYWORD(kw)
+///   POUND_KEYWORD(kw)
+///     POUND_OBJECT_LITERAL(kw, desc, proto)
+///     POUND_CONFIG(kw)
+///     POUND_DIRECTIVE_KEYWORD(kw)
+///       POUND_COND_DIRECTIVE_KEYWORD(kw)
+///   PUNCTUATOR(name, str)
+///   LITERAL(name)
+///   MISC(name)
+///
+//===----------------------------------------------------------------------===//
+
+/// TOKEN(name)
+///   Expands by default for every token kind.
+#ifndef TOKEN
+#define TOKEN(name)
+#endif
+
+/// KEYWORD(kw)
+///   Expands by default for every Swift keyword and every SIL keyword, such as
+///   'if', 'else', 'sil_global', etc. If you only want to use Swift keywords
+///   see SWIFT_KEYWORD.
+#ifndef KEYWORD
+#define KEYWORD(kw) TOKEN(kw_ ## kw)
+#endif
+
+/// SWIFT_KEYWORD(kw)
+///   Expands for every Swift keyword.
+#ifndef SWIFT_KEYWORD
+#define SWIFT_KEYWORD(kw) KEYWORD(kw)
+#endif
+
+/// DECL_KEYWORD(kw)
+///   Expands for every Swift keyword that can be used in a declaration.
+#ifndef DECL_KEYWORD
+#define DECL_KEYWORD(kw) SWIFT_KEYWORD(kw)
+#endif
+
+/// STMT_KEYWORD(kw)
+///   Expands for every Swift keyword used in statement grammar.
+#ifndef STMT_KEYWORD
+#define STMT_KEYWORD(kw) SWIFT_KEYWORD(kw)
+#endif
+
+/// EXPR_KEYWORD(kw)
+///   Expands for every Swift keyword used in an expression, such as 'true',
+///   'false', and 'as'
+#ifndef EXPR_KEYWORD
+#define EXPR_KEYWORD(kw) SWIFT_KEYWORD(kw)
+#endif
+
+/// PAT_KEYWORD(kw)
+///   Expands for every Swift keyword used in a pattern, which is currently
+///   limited to '_'
+#ifndef PAT_KEYWORD
+#define PAT_KEYWORD(kw) SWIFT_KEYWORD(kw)
+#endif
+
+/// SIL_KEYWORD(kw)
+///   Expands for every SIL keyword. These are only keywords when parsing SIL.
+#ifndef SIL_KEYWORD
+#define SIL_KEYWORD(kw) KEYWORD(kw)
+#endif
+
+/// POUND_KEYWORD(kw)
+///   Every keyword prefixed with a '#'.
+#ifndef POUND_KEYWORD
+#define POUND_KEYWORD(kw) TOKEN(pound_ ## kw)
+#endif
+
+/// POUND_OBJECT_LITERAL(kw, desc, proto)
+///   Every keyword prefixed with a '#' representing an object literal.
+#ifndef POUND_OBJECT_LITERAL
+#define POUND_OBJECT_LITERAL(kw, desc, proto) POUND_KEYWORD(kw)
+#endif
+
+/// POUND_CONFIG(kw)
+///   Every keyword prefixed with a '#' representing a configuration.
+#ifndef POUND_CONFIG
+#define POUND_CONFIG(kw) POUND_KEYWORD(kw)
+#endif
+
+/// POUND_DIRECTIVE_KEYWORD(kw)
+///   Every keyword prefixed with a '#' that is a compiler control directive.
+#ifndef POUND_DIRECTIVE_KEYWORD
+#define POUND_DIRECTIVE_KEYWORD(kw) POUND_KEYWORD(kw)
+#endif
+
+/// POUND_COND_DIRECTIVE_KEYWORD(kw)
+///   Every keyword prefixed with a '#' that is part of conditional compilation
+///   control.
+#ifndef POUND_COND_DIRECTIVE_KEYWORD
+#define POUND_COND_DIRECTIVE_KEYWORD(kw) POUND_DIRECTIVE_KEYWORD(kw)
+#endif
+
+/// PUNCTUATOR(name, str)
+///   Expands for every Swift punctuator.
+///   \param name  The symbolic name of the punctuator, such as
+///                'l_paren' or 'arrow'.
+///   \param str   A string literal containing the spelling of the punctuator,
+///                such as '"("' or '"->"'.
+#ifndef PUNCTUATOR
+#define PUNCTUATOR(name, str) TOKEN(name)
+#endif
+
+/// LITERAL(name)
+///   Tokens representing literal values, e.g. 'integer_literal'.
+#ifndef LITERAL
+#define LITERAL(name) TOKEN(name)
+#endif
+
+/// MISC(name)
+///   Miscellaneous tokens, e.g. 'eof' and 'unknown'.
+#ifndef MISC
+#define MISC(name) TOKEN(name)
+#endif
+
+// Keywords that start decls.
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(associatedtype)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(class)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(deinit)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(enum)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(extension)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(func)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(import)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(init)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(inout)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(let)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(operator)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(precedencegroup)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(protocol)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(struct)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(subscript)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(typealias)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(var)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(fileprivate)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(internal)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(private)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(public)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+DECL_KEYWORD(static)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(defer)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(if)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(guard)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(do)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(repeat)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(else)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(for)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(in)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(while)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(return)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(break)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(continue)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(fallthrough)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(switch)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(case)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(default)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(where)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(catch)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+STMT_KEYWORD(throw)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(as)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(Any)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(false)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(is)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(nil)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(rethrows)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(super)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(self)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(Self)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(true)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(try)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+EXPR_KEYWORD(throws)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+KEYWORD(__FILE__)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+KEYWORD(__LINE__)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+KEYWORD(__COLUMN__)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+KEYWORD(__FUNCTION__)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+KEYWORD(__DSO_HANDLE__)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+PAT_KEYWORD(_)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(l_paren, "(")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(r_paren, ")")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(l_brace, "{")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(r_brace, "}")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(l_square, "[")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(r_square, "]")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(l_angle, "<")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(r_angle, ">")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(period, ".")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(period_prefix, ".")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(comma, ",")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(ellipsis, "...")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(colon, ":")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(semi, ";")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(equal, "=")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(at_sign, "@")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(pound, "#")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(amp_prefix, "&")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(arrow, "->")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(backtick, "`")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(backslash, "\\")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(exclaim_postfix, "!")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(question_postfix, "?")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(question_infix, "?")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(string_quote, "\"")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(single_quote, "\'")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 149)
+PUNCTUATOR(multiline_string_quote, "\"\"\"")
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(keyPath)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(line)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(selector)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(file)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(fileID)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(filePath)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(column)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(function)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(dsohandle)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_KEYWORD(assert)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_DIRECTIVE_KEYWORD(sourceLocation)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_DIRECTIVE_KEYWORD(warning)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_DIRECTIVE_KEYWORD(error)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_COND_DIRECTIVE_KEYWORD(if)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_COND_DIRECTIVE_KEYWORD(else)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_COND_DIRECTIVE_KEYWORD(elseif)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_COND_DIRECTIVE_KEYWORD(endif)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+POUND_CONFIG(available)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 151)
+POUND_OBJECT_LITERAL(fileLiteral, "file reference", ExpressibleByFileReferenceLiteral)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 151)
+POUND_OBJECT_LITERAL(imageLiteral, "image", ExpressibleByImageLiteral)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 151)
+POUND_OBJECT_LITERAL(colorLiteral, "color", ExpressibleByColorLiteral)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+LITERAL(integer_literal)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+LITERAL(floating_literal)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+LITERAL(string_literal)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(unknown)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(identifier)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(oper_binary_unspaced)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(oper_binary_spaced)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(oper_postfix)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(oper_prefix)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(dollarident)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(contextual_keyword)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(raw_string_delimiter)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(string_segment)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(string_interpolation_anchor)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 153)
+MISC(kw_yield)
+// ###sourceLocation(file: "/home/i516739/swift/include/swift/Syntax/TokenKinds.def.gyb", line: 156)
+
+// The following tokens are irrelevant for swiftSyntax and thus only declared 
+// in this .def file
+
+SIL_KEYWORD(undef)
+SIL_KEYWORD(sil)
+SIL_KEYWORD(sil_stage)
+SIL_KEYWORD(sil_property)
+SIL_KEYWORD(sil_vtable)
+SIL_KEYWORD(sil_global)
+SIL_KEYWORD(sil_witness_table)
+SIL_KEYWORD(sil_default_witness_table)
+SIL_KEYWORD(sil_differentiability_witness)
+SIL_KEYWORD(sil_coverage_map)
+SIL_KEYWORD(sil_scope)
+
+PUNCTUATOR(sil_dollar,    "$")    // Only in SIL mode.
+PUNCTUATOR(sil_exclamation, "!")    // Only in SIL mode.
+
+MISC(eof)
+MISC(code_complete)
+MISC(sil_local_name)       // %42 in SIL mode.
+MISC(comment)
+
+
+#undef TOKEN
+#undef KEYWORD
+#undef SWIFT_KEYWORD
+#undef DECL_KEYWORD
+#undef STMT_KEYWORD
+#undef EXPR_KEYWORD
+#undef PAT_KEYWORD
+#undef SIL_KEYWORD
+#undef POUND_KEYWORD
+#undef POUND_OBJECT_LITERAL
+#undef POUND_CONFIG
+#undef POUND_DIRECTIVE_KEYWORD
+#undef POUND_COND_DIRECTIVE_KEYWORD
+#undef PUNCTUATOR
+#undef LITERAL
+#undef MISC
