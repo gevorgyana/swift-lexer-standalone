@@ -130,7 +130,7 @@ static bool fillRanges(MemoryBuffer *Code,
   return false;
 }
 
-static bool format(StringRef FileName) {
+static bool format_swift(StringRef FileName) {
   // On Windows, overwriting a file with an open file mapping doesn't work,
   // so read the whole file into memory when formatting in-place.
   ErrorOr<std::unique_ptr<MemoryBuffer>> CodeOrErr
@@ -216,4 +216,8 @@ static bool format(StringRef FileName) {
   }
   return false;
   */
+}
+
+int main() {
+  bool res = format_swift("test/foo.cpp");
 }
