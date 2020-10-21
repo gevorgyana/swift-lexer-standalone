@@ -49,3 +49,16 @@ Will not inlcude them to VCS, libraries/ is gitignored.
 
 23:50, 21.10 Solved: just need to set LD_LIBRARY_PATH on linux, and a
 similar environment var on OSX. Windows should be easy to support too.
+
+The next step is to conver clang::SourceManager to swift::SourceManger,
+seems like an easy task because swift was clearly copied from clang, and
+there is a whole ClangImporter module in swift (maybe it can help?)
+
+No. SourceManager in swift is different from SourceManager in clang.
+SourceManager in clang is what we use when working with clang-format,
+SourceManager in Swift should be satisfied to feed it to the code that
+must perform tokenization. Maybe it is more reasonable to split
+getting Tokens from the rest of the code - and in that part of the
+program, interact with code as Swift does. Then obtian a series of
+Tokens, adapt them to clang representation and here we go - we can format
+them now.

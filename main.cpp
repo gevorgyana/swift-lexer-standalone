@@ -167,6 +167,8 @@ static bool format_swift(StringRef FileName) {
   clang::FileID id(sourceMgr->get().getMainFileID());
   // This is useless
   // clang::format::encoding::Encoding enc(clang::format::encoding::detectEncoding(sourceMgrReal.getBufferData(id)));
+
+  // Now use the Swift Lexer to obtain tokens
   return true;
 }
 
