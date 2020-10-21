@@ -10,6 +10,8 @@
 #include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/Process.h"
 
+#include <iostream>
+
 using namespace llvm;
 using namespace clang;
 
@@ -149,6 +151,8 @@ static bool format_swift(StringRef FileName) {
   std::vector<clang::tooling::Range> Ranges;
   if (fillRanges(Code.get(), Ranges))
     return true;
+
+  std::cout << BufStr.str();
 
   /*
   StringRef AssumedFileName = (FileName == "-") ? AssumeFileName : FileName;
