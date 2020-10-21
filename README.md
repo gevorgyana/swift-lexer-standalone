@@ -39,3 +39,8 @@ Maybe I missed some headers, but anyway, you should (currently) get
 the files when building clang before proceeding with this software.
 I have included my files in git, but probably this hardcodes some of
 the logic that clang tries to lift.
+
+16:21, 21.10
+Need to include the binary dependencies of clang-format. It is not a
+bad problem to build that, it only takes ~1hr (not 10hrs like Swift!).
+Will not inlcude them to VCS, libraries/ is gitignored.
