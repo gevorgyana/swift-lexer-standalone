@@ -11,7 +11,6 @@
 #include "llvm/Support/Process.h"
 
 using namespace llvm;
-using clang::tooling::Replacements;
 using namespace clang;
 
 static cl::OptionCategory ClangFormatCategory("this is it");
@@ -41,6 +40,7 @@ static cl::list<std::string>
                         "Can't be used with -offset and -length.\n"
                         "Can only be used with one input file."),
                cl::cat(ClangFormatCategory));
+
 // Parses <start line>:<end line> input to a pair of line numbers.
 // Returns true on error.
 static bool parseLineRange(StringRef Input, unsigned &FromLine,
@@ -49,7 +49,6 @@ static bool parseLineRange(StringRef Input, unsigned &FromLine,
   return LineRange.first.getAsInteger(0, FromLine) ||
          LineRange.second.getAsInteger(0, ToLine);
 }
-
 
 static FileID createInMemoryFile(StringRef FileName, MemoryBuffer *Source,
                                  SourceManager &Sources, FileManager &Files,
@@ -150,6 +149,7 @@ static bool format(StringRef FileName) {
   std::vector<clang::tooling::Range> Ranges;
   if (fillRanges(Code.get(), Ranges))
     return true;
+
   /*
   StringRef AssumedFileName = (FileName == "-") ? AssumeFileName : FileName;
   if (AssumedFileName.empty()) {
