@@ -11,6 +11,7 @@
 #include "llvm/Support/Process.h"
 
 #include <iostream>
+#include <memory>
 
 using namespace llvm;
 using namespace clang;
@@ -132,94 +133,30 @@ static bool fillRanges(MemoryBuffer *Code,
   return false;
 }
 
+/// THIS IS WHAT I AM WOKRING ON
 static bool format_swift(StringRef FileName) {
-  // On Windows, overwriting a file with an open file mapping doesn't work,
-  // so read the whole file into memory when formatting in-place.
   ErrorOr<std::unique_ptr<MemoryBuffer>> CodeOrErr
       = MemoryBuffer::getFileAsStream(FileName);
   if (std::error_code EC = CodeOrErr.getError()) {
     errs() << EC.message() << "\n";
     return true;
   }
-
   std::unique_ptr<llvm::MemoryBuffer> Code = std::move(CodeOrErr.get());
   if (Code->getBufferSize() == 0)
     return false; // Empty files are formatted correctly.
 
   StringRef BufStr = Code->getBuffer();
-
   std::vector<clang::tooling::Range> Ranges;
   if (fillRanges(Code.get(), Ranges))
     return true;
 
+  // Print what we have now, TODO should be hidden in Release
   std::cout << BufStr.str();
 
-  /*
-  StringRef AssumedFileName = (FileName == "-") ? AssumeFileName : FileName;
-  if (AssumedFileName.empty()) {
-    llvm::errs() << "error: empty filenames are not allowed\n";
-    return true;
-  }
+  // Load the environment
+  std::unique_ptr<clang::SourceManagerForFile> sourceMgr(new clang::SourceManagerForFile(FileName, BufStr));
 
-  llvm::Expected<FormatStyle> FormatStyle =
-      getStyle(Style, AssumedFileName, FallbackStyle, Code->getBuffer());
-  if (!FormatStyle) {
-    llvm::errs() << llvm::toString(FormatStyle.takeError()) << "\n";
-    return true;
-  }
-
-  if (SortIncludes.getNumOccurrences() != 0)
-    FormatStyle->SortIncludes = SortIncludes;
-  unsigned CursorPosition = Cursor;
-  Replacements Replaces = sortIncludes(*FormatStyle, Code->getBuffer(), Ranges,
-                                       AssumedFileName, &CursorPosition);
-  auto ChangedCode = tooling::applyAllReplacements(Code->getBuffer(), Replaces);
-  if (!ChangedCode) {
-    llvm::errs() << llvm::toString(ChangedCode.takeError()) << "\n";
-    return true;
-  }
-  // Get new affected ranges after sorting `#includes`.
-  Ranges = tooling::calculateRangesAfterReplacements(Replaces, Ranges);
-  FormattingAttemptStatus Status;
-  Replacements FormatChanges =
-      reformat(*FormatStyle, *ChangedCode, Ranges, AssumedFileName, &Status);
-  Replaces = Replaces.merge(FormatChanges);
-  if (OutputXML || DryRun) {
-    if (DryRun) {
-      return emitReplacementWarnings(Replaces, AssumedFileName, Code);
-    } else {
-      outputXML(Replaces, FormatChanges, Status, Cursor, CursorPosition);
-    }
-  } else {
-    IntrusiveRefCntPtr<llvm::vfs::InMemoryFileSystem> InMemoryFileSystem(
-        new llvm::vfs::InMemoryFileSystem);
-    FileManager Files(FileSystemOptions(), InMemoryFileSystem);
-    DiagnosticsEngine Diagnostics(
-        IntrusiveRefCntPtr<DiagnosticIDs>(new DiagnosticIDs),
-        new DiagnosticOptions);
-    SourceManager Sources(Diagnostics, Files);
-    FileID ID = createInMemoryFile(AssumedFileName, Code.get(), Sources, Files,
-                                   InMemoryFileSystem.get());
-    Rewriter Rewrite(Sources, LangOptions());
-    tooling::applyAllReplacements(Replaces, Rewrite);
-    if (Inplace) {
-      if (Rewrite.overwriteChangedFiles())
-        return true;
-    } else {
-      if (Cursor.getNumOccurrences() != 0) {
-        outs() << "{ \"Cursor\": "
-               << FormatChanges.getShiftedCodePosition(CursorPosition)
-               << ", \"IncompleteFormat\": "
-               << (Status.FormatComplete ? "false" : "true");
-        if (!Status.FormatComplete)
-          outs() << ", \"Line\": " << Status.Line;
-        outs() << " }\n";
-      }
-      Rewrite.getEditBuffer(ID).write(outs());
-    }
-  }
-  return false;
-  */
+  return true;
 }
 
 int main() {

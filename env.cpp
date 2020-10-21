@@ -27,7 +27,9 @@
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/Debug.h"
 
+#include <memory>
+
 int main () {
   // Load the environment
-  auto f = new SourceManagerForFile(FileName, Code);
+  std::unique_ptr<clang::SourceManagerForFile> sourceMgr = new clang::SourceManagerForFile(FileName, Code);
 }
