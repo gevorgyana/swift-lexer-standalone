@@ -1,3 +1,9 @@
+/* THIS IS A SOURCE FILE TAKEN FROM LLVM PROJECT, SWIFT PROJECT
+ * THEY HAVE THEIR OWN LICENSE, PLEASE GO CHECK IT OUT.
+ * I HAVE JUST USED THEM HERE FOR MY OWN PROJECT WHICH IS LICENSED IN
+ * THE SAME WAY THESE 2 ARE.
+ */
+
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/Basic/FileManager.h"
@@ -159,10 +165,8 @@ static bool format_swift(StringRef FileName) {
   std::unique_ptr<clang::SourceManagerForFile> sourceMgr(new clang::SourceManagerForFile(FileName, BufStr));
   clang::SourceManager& sourceMgrReal(sourceMgr->get());
   clang::FileID id(sourceMgr->get().getMainFileID());
-
-  // Let's check now that encoding detection works - use LLDB to inspect
-  clang::format::encoding::Encoding(clang::format::encoding::detectEncoding(sourceMgrReal.getBufferData(id)));
-
+  // This is useless
+  // clang::format::encoding::Encoding enc(clang::format::encoding::detectEncoding(sourceMgrReal.getBufferData(id)));
   return true;
 }
 

@@ -46,3 +46,6 @@ bad problem to build that, it only takes ~1hr (not 10hrs like Swift!).
 Will not inlcude them to VCS, libraries/ is gitignored.
 
 16:28, 21.10 Maybe it is better to rely on packages??
+
+23:50, 21.10 Solved: just need to set LD_LIBRARY_PATH on linux, and a
+similar environment var on OSX. Windows should be easy to support too.
