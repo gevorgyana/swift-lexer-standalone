@@ -10,6 +10,8 @@
 #include "llvm/Support/InitLLVM.h"
 #include "llvm/Support/Process.h"
 
+#include "Encoding.h"
+
 #include <iostream>
 #include <memory>
 
@@ -155,6 +157,11 @@ static bool format_swift(StringRef FileName) {
 
   // Load the environment
   std::unique_ptr<clang::SourceManagerForFile> sourceMgr(new clang::SourceManagerForFile(FileName, BufStr));
+  clang::SourceManager& sourceMgrReal(sourceMgr->get());
+  clang::FileID id(sourceMgr->get().getMainFileID());
+
+  // Let's check now that encoding detection works - use LLDB to inspect
+  clang::format::encoding::Encoding(clang::format::encoding::detectEncoding(sourceMgrReal.getBufferData(id)));
 
   return true;
 }
