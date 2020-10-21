@@ -27,3 +27,15 @@ unappologetically long. The builds are incremental and the finer-grained
 the tree is, the better performance of linking one or two components from
 scratch is. But the initial build still would take me more than 12 hours,
 which is just insane!
+
+This project uses clang dependencies. You have to compile clang-format
+separately on your local machine first. Some files need to be configured
+on your machine, like
+
+`calng/Basic/Version.inc`,
+`clang/Basic/DiagnosticCommonKinds.inc`.
+
+Maybe I missed some headers, but anyway, you should (currently) get
+the files when building clang before proceeding with this software.
+I have included my files in git, but probably this hardcodes some of
+the logic that clang tries to lift.
