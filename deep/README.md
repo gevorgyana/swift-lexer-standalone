@@ -38,3 +38,7 @@ thing as a script.x
 
 Next, you need to do some .gyb-magic. Pick the Python tool and run
 in in-tree - necessary .def files will appear.
+
+Last step, download the 5.3 binaries from Swift official website. It is
+a release build, BUT IT IS NOT STRIPPED so we can actually debug it and
+see stack trace!! It is awesome.
