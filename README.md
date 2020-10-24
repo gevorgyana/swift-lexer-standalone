@@ -62,3 +62,9 @@ getting Tokens from the rest of the code - and in that part of the
 program, interact with code as Swift does. Then obtian a series of
 Tokens, adapt them to clang representation and here we go - we can format
 them now.
+
+NOTE: -- if checking these out, make sure you check out correct tags!!!
+      -- not master/dev/etc. branch, but tags!
+
+- git@github.com:apple/llvm-project.git
+- git@github.com:apple/swift.git
