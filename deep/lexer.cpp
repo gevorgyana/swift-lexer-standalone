@@ -2,6 +2,7 @@
 #include "swift/Basic/LangOptions.h"
 #include "swift/AST/ASTContext.h"
 #include "swift/AST/DiagnosticEngine.h"
+#include "swift/Frontend/InputFile.h"
 
 /// Use Swift Lexer
 
@@ -13,8 +14,25 @@
 
  */
 
+#include <iostream>
+
 int main() {
   swift::SourceManager mgr;
+
+  // from CompilerInstance::setUpInputs(), we have to
+  // use CompilerInstance::setUpInput(InputFile*)
+  // set up InputFile first
+  // It needs a llvm::MemoryBuffer and string arguments
+  /*
+    InputFile(StringRef name, bool isPrimary,
+            llvm::MemoryBuffer *buffer = nullptr,
+            StringRef outputFilename = StringRef())
+  */
+
+  // Nothing is primary here
+  swift::InputFile in("main.swift", false);
+  std::cout << in.file();
+
   swift::DiagnosticEngine eng(mgr);
   swift::LangOptions lang_opts;
   swift::TypeCheckerOptions tch_opts;
