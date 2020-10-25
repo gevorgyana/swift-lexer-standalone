@@ -15,6 +15,7 @@
  */
 
 #include <iostream>
+#include "swift/Frontend/Frontend.h"
 
 int main() {
   swift::SourceManager mgr;
@@ -40,12 +41,47 @@ int main() {
   swift::SearchPathOptions sp_opts;
   swift::ASTContext::get(lang_opts, tch_opts, sp_opts, mgr, eng);
 
-  // now that we have a valid context, we can do what
-  // ClangImporter::create() does.
+  // SourceManager, BufferID is what we need to be able to use Lexer
+  // As lldb points, only clang::SourceManager is being created. this
+  // is CLEARLY coming from ClangImporter.
 
-  // SourceManager, BufferID
-  // 1 - get bufferid from source manager inside astcontext???
-  // 2 - how tf we initialize source files?????? memory buffer is still
-  // empty!!!
+  // First, lldb shows that clang::Parser is called, but that makes
+  // no sense to me, I am not interested. Then, it enters swift::Parser
+  // And it grows the stack 3 times, which means that we enter
+  // overloaded functions. Conclusion: Just skip the first breakpoint,
+  // then see what happens above swift::Parser.
+
+  // It is coming thru ParseSourceFileRequest. So need to track that.
+  // Everything happens inside performSemaUpTo() inside CompilerInstance
+  // the swift::CompilerInstance, not clang's!!!
+  // SourceFile is created 1 time and it is done there!!!!
+  // this is in Frontend.cpp file
+
+  // this is called from performCompiler in
+  // ForntendTool/FrontendTool.cpp
+
+  // PerformSemaUpTo(SourceFile::TypeChecked) is the stage that we need
+
+
+
+  /////////////////
+  /// Okay makes more sense now.
+  /// First, we go setUpModuleLoaders(), then we do file manipulations
+  /// and reach clang::SourceManager, along with SourceFiles and
+  /// buffers. ASTContext is set up separately.
+
+  /// ForntendTool is the main entry point, everything else is utility.
+
+  /// First, compiler instance is created, second, compilation is
+  /// triggered
+
+
+  /// Need a CompilerInstance, call everything its env. calls on it,
+  /// then call performSemaUpTo. The next thing will be refine that
+  /// monolith.
+
+  std::unique_ptr<swift::CompilerInstance> Instance =
+      std::make_unique<swift::CompilerInstance>();
+
   return 0;
 }
