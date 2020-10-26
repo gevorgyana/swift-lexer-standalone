@@ -19,5 +19,10 @@ int main() {
       contents,
       lexMode
   );
+  swift::Token Tok;
+  swift::ParsedTrivia LeadingTrivia, TrailingTrivia;
+  do {
+    L.lex(Tok, LeadingTrivia, TrailingTrivia);
+  } while (Tok.getKind() != swift::tok::eof);
   return 0;
 }

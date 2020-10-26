@@ -75,6 +75,7 @@ class Lexer {
   const LangOptions &LangOpts;
   const SourceManager &SourceMgr;
   const unsigned BufferID;
+  const std::string SourceCode;
   DiagnosticEngine *Diags;
 
   using State = LexerState;

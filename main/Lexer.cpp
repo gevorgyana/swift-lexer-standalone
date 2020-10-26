@@ -183,8 +183,13 @@ Lexer::Lexer(
     LexMode(LexMode),
     IsHashbangAllowed(HashbangAllowed == HashbangMode::Allowed),
     RetainComments(RetainComments),
-    TriviaRetention(TriviaRetention)
-{}
+    TriviaRetention(TriviaRetention),
+    SourceCode(contents)
+{
+  // let's say that all UTF-8 chars must be escaped. It is up to
+  // the client code to make sure it really is
+  initialize(/*BeginOffset*/ 0, contents.size());
+}
 
 Lexer::Lexer(const PrincipalTag &, const LangOptions &LangOpts,
              const SourceManager &SourceMgr, unsigned BufferID,
@@ -200,7 +205,7 @@ void Lexer::initialize(unsigned Offset, unsigned EndOffset) {
   assert(Offset <= EndOffset);
 
   // Initialize buffer pointers.
-  StringRef contents("func main() {}");
+  StringRef contents(SourceCode);
   BufferStart = contents.data();
   BufferEnd = contents.data() + contents.size();
   assert(*BufferEnd == 0);

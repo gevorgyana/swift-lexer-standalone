@@ -1,3 +1,5 @@
+![SUCCESS!](./images/lldb.png)
+
 It is important to know that I have used REALEASE-5.3 version of
 Swift. I have experienced problem while linking to a more recent
 version of Swift, as they have indeed chaged the code.
