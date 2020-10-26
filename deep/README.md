@@ -62,3 +62,9 @@ I don't really need to build the standard library.
 !!! IMPORTANT. DO NOT TRY TO USE -DUMP-AST, as it will try to find
 the standard library, and I don't think it makes sense to build that too!
 So just run -dump-parse, which will simply not analyze the code!
+
+HUGE UPDATE!!!!!
+I don't need the whole initiazliation procedule, the only thing
+required from SourceManager is a StringRef with the contents of the file;
+I can do that with a custom method!!!!!
+HURRAY :facepalm:
