@@ -83,5 +83,13 @@ int main() {
   std::unique_ptr<swift::CompilerInstance> Instance =
       std::make_unique<swift::CompilerInstance>();
 
+  /// If we have this binary call Parser() or Lexer(), then we can
+  /// start splitting this binary instead of doing the bigger job
+  /// of splitting the whole Swift
+
+  /// Invocation is needed to run CompilerInstance, but it jsut contains
+  /// configuration files, I am still sure I can do without it. For
+  /// that, I will need to see how CompilerInsance works.
+
   return 0;
 }

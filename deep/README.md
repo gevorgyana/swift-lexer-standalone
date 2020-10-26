@@ -42,3 +42,12 @@ in in-tree - necessary .def files will appear.
 Last step, download the 5.3 binaries from Swift official website. It is
 a release build, BUT IT IS NOT STRIPPED so we can actually debug it and
 see stack trace!! It is awesome.
+
+GOOD NEWS:
+It takes one night to build Swift. Here is what I did.
+- Prepare disk space
+- Prepare swap (50G in my case)
+- Update checkout to checkout the nearest release version
+- Build with utils/build-script
+- Stop when it finishes building llvm and wait for a little bit
+- Go to swift build directory (not llvm), and run `ninja -j4 bin/swift`
