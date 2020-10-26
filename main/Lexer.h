@@ -103,7 +103,7 @@ class Lexer {
   const char *CurPtr;
 
   Token NextToken;
-  
+
   /// The kind of source we're lexing. This either enables special behavior for
   /// module interfaces, or enables things like the 'sil' keyword if lexing
   /// a .sil file.
@@ -131,7 +131,7 @@ class Lexer {
   /// This is only preserved if this Lexer was constructed with
   /// `TriviaRetentionMode::WithTrivia`.
   ParsedTrivia TrailingTrivia;
-  
+
   Lexer(const Lexer&) = delete;
   void operator=(const Lexer&) = delete;
 
@@ -168,6 +168,13 @@ public:
       HashbangMode HashbangAllowed = HashbangMode::Disallowed,
       CommentRetentionMode RetainComments = CommentRetentionMode::None,
       TriviaRetentionMode TriviaRetention = TriviaRetentionMode::WithoutTrivia);
+
+  // Lexer relying on strings
+  Lexer(const LangOptions &Options, std::string contents,
+        LexerMode LexMode,
+        HashbangMode HashbangAllowed = HashbangMode::Disallowed,
+        CommentRetentionMode RetainComments = CommentRetentionMode::None,
+        TriviaRetentionMode TriviaRetention = TriviaRetentionMode::WithoutTrivia);
 
   /// Create a lexer that scans a subrange of the source buffer.
   Lexer(const LangOptions &Options, const SourceManager &SourceMgr,
@@ -379,7 +386,7 @@ public:
   SourceLoc getLocForStartOfBuffer() const {
     return SourceLoc(llvm::SMLoc::getFromPointer(BufferStart));
   }
-  
+
   /// StringSegment - A segment of a (potentially interpolated) string.
   struct StringSegment {
     enum : char { Literal, Expr } Kind;
@@ -402,7 +409,7 @@ public:
       Result.CustomDelimiterLen = CustomDelimiterLen;
       return Result;
     }
-    
+
     static StringSegment getExpr(SourceLoc Loc, unsigned Length) {
       StringSegment Result;
       Result.Kind = Expr;
@@ -482,9 +489,6 @@ public:
     return SourceLoc(llvm::SMLoc::getFromPointer(Loc));
   }
 
-  /// Get the token that starts at the given location.
-  Token getTokenAt(SourceLoc Loc);
-
   /// SILBodyRAII - This helper class is used when parsing a SIL body to inform
   /// the lexer that SIL-specific lexing should be enabled.
   struct SILBodyRAII {
@@ -520,7 +524,7 @@ private:
 
   void lexImpl();
   InFlightDiagnostic diagnose(const char *Loc, Diagnostic Diag);
-  
+
   template<typename ...DiagArgTypes, typename ...ArgTypes>
   InFlightDiagnostic diagnose(const char *Loc, Diag<DiagArgTypes...> DiagID,
                               ArgTypes &&...Args) {
@@ -572,7 +576,7 @@ private:
 
   NulCharacterKind getNulCharacterKind(const char *Ptr) const;
 };
-  
+
 /// Given an ordered token \param Array , get the iterator pointing to the first
 /// token that is not before \param Loc .
 template<typename ArrayTy, typename Iterator = typename ArrayTy::iterator>
