@@ -10,3 +10,6 @@ lldb: lexer.cpp Lexer.cpp Confusables.cpp
 	# ending with usr/lib
 	LD_LIBRARY_PATH=$(SWIFT_BINARIES) /usr/lib/llvm-11/bin/lldb ./lexer main.swift
 	rm lexer
+
+preproc: TokenKinds.h
+	clang++ -E TokenKinds.h -I$(addprefix $(SWIFT_CONFIGURED_SOURCES), /build/Ninja-DebugAssert/llvm-linux-x86_64/include) -I$(addprefix $(SWIFT_CONFIGURED_SOURCES), /build/Ninja-DebugAssert/swift-linux-x86_64/include) -I$(addprefix $(SWIFT_CONFIGURED_SOURCES), /llvm-project/clang/include) -I$(addprefix $(SWIFT_CONFIGURED_SOURCES), /swift/include) -I$(addprefix $(SWIFT_CONFIGURED_SOURCES), /llvm-project/llvm/include)
