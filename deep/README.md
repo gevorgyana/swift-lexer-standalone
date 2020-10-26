@@ -51,3 +51,14 @@ It takes one night to build Swift. Here is what I did.
 - Build with utils/build-script
 - Stop when it finishes building llvm and wait for a little bit
 - Go to swift build directory (not llvm), and run `ninja -j4 bin/swift`
+
+`./swiftc -dump-parse main.swift` run this command, but do not forget
+about -###, then copy paste the result after this
+`lldb -- `
+
+Usual targets like building the whole eecutable failt with no stdlib, and
+I don't really need to build the standard library.
+
+!!! IMPORTANT. DO NOT TRY TO USE -DUMP-AST, as it will try to find
+the standard library, and I don't think it makes sense to build that too!
+So just run -dump-parse, which will simply not analyze the code!
