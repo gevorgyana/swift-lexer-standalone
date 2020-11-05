@@ -171,7 +171,7 @@ public:
       TriviaRetentionMode TriviaRetention = TriviaRetentionMode::WithoutTrivia);
 
   // Lexer relying on strings
-  Lexer(const LangOptions &Options, std::string contents,
+  Lexer(const LangOptions &Options, const SourceManager &SourceMgr, std::string contents,
         LexerMode LexMode,
         HashbangMode HashbangAllowed = HashbangMode::Disallowed,
         CommentRetentionMode RetainComments = CommentRetentionMode::None,

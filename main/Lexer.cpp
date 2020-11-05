@@ -171,13 +171,13 @@ uint32_t swift::validateUTF8CharacterAndAdvance(const char *&Ptr,
 //===----------------------------------------------------------------------===//
 
 Lexer::Lexer(
-      const LangOptions &Options,
-      std::string contents,
-      LexerMode LexMode,
-      HashbangMode HashbangAllowed,
-      CommentRetentionMode RetainComments,
-      TriviaRetentionMode TriviaRetention) :
-    SourceMgr(SourceManager()),
+	     const LangOptions &Options, const SourceManager &SourceMgr,
+	     std::string contents,
+	     LexerMode LexMode,
+	     HashbangMode HashbangAllowed,
+	     CommentRetentionMode RetainComments,
+	     TriviaRetentionMode TriviaRetention) :
+    SourceMgr(SourceMgr),
     LangOpts(Options),
     BufferID(0),
     LexMode(LexMode),

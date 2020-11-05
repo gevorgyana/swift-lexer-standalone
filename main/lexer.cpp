@@ -14,8 +14,10 @@ int main() {
   );
   std::cout << contents << std::endl;
   swift::LexerMode lexMode;
+  swift::SourceManager SM;
   swift::Lexer L(
       langOpts,
+      SM,
       contents,
       lexMode
   );
