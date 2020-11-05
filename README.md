@@ -70,10 +70,12 @@ NOTE: -- if checking these out, make sure you check out correct tags!!!
 - git@github.com:apple/swift.git
 
 
-- On fresh ubuntu, install `libicu-dev` -- intenrational support for unicode
+- On fresh ubuntu, install `libicu-dev libicu66` -- intenrational support for unicode
 https://packages.ubuntu.com/focal/libicu-dev
 everything else is easily installed. this was tested with fresh focal ubuntu.
-
+- `uuid-dev`
 - Install what it asks to install - lld, sth. else that is easily inferred.
 - Install `python-is-python3` and `python-all`. The first binds `python` to
 `python3` and the second installs the maximum python2 that is availabe.
+
+ICU bugs out
