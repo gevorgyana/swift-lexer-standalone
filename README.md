@@ -77,5 +77,3 @@ everything else is easily installed. this was tested with fresh focal ubuntu.
 - Install what it asks to install - lld, sth. else that is easily inferred.
 - Install `python-is-python3` and `python-all`. The first binds `python` to
 `python3` and the second installs the maximum python2 that is availabe.
-
-ICU bugs out
