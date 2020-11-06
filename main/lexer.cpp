@@ -1,5 +1,6 @@
 #include "Lexer.h"
 #include "swift/Basic/LangOptions.h"
+#include "shim.h"
 
 #include <fstream>
 #include <string>
@@ -25,6 +26,7 @@ int main() {
   swift::ParsedTrivia LeadingTrivia, TrailingTrivia;
   do {
     L.lex(Tok, LeadingTrivia, TrailingTrivia);
+    auto in_clang_terms = shim(Tok.getKind());
   } while (Tok.getKind() != swift::tok::eof);
   return 0;
 }
