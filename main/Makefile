@@ -26,3 +26,5 @@ generate_clang_tokens: generate_clang_tokens.cpp
 	# LD_LIBRARY_PATH=$(SWIFT_BINARIES) ./shim
 	# rm shim
 
+em_clean:
+	rm *~
