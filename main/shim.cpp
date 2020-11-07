@@ -130,20 +130,36 @@ namespace clang {
   }
 }
 
-int main() {
+// Visit all Swift tokens and convert them into a string value
+#define TOKEN(id)				\
+  #id,
+static char const* SWIFT_TOKEN_STRING_REPR[] = {
+#include "swift/Syntax/TokenKinds.def"				  
+#undef TOKEN
+};
+
+clang::tok::TokenKind shim(swift::tok SwiftTok) {
+  // First of all, we should convert the numeric value that we have to
+  // a string. For that, we have defined the swift token in string form
+  auto SwiftTokStr =  SWIFT_TOKEN_STRING_REPR[static_cast<unsigned short>(SwiftTok)];
+  
   // From the compiler's point of view, it is all good, because we do have all of
   // the necessary tokens types in clang as we have extended them above
   // But we won't need everything, but some of the characters have to be remapped.
   // Which is why we use a Runtime switch with a checker built into it.
   auto RuntimeSwitch =
-    llvm::StringSwitch<clang::tok::TokenKind>(StringRef("23"));
+    llvm::StringSwitch<clang::tok::TokenKind>(StringRef(SwiftTokStr));
   
 #define TOKEN(id)						\
-  if (strcmp(#id, "<") != 0 && strcmp(#id, ">") != 0) {		\
+  if (strcmp(#id, "l_angle") != 0 && strcmp(#id, "r_angle") != 0) {		\
     RuntimeSwitch.Case(#id, clang::tok::TokenKind::id);		\
   }
 #include "swift/Syntax/TokenKinds.def"
-  RuntimeSwitch.Case("<", clang::tok::TokenKind::pound);
-  RuntimeSwitch.Case(">", clang::tok::TokenKind::pound);
-  clang::tok::TokenKind Kind = RuntimeSwitch.Default(clang::tok::TokenKind::pound);
+  RuntimeSwitch.Case("l_angle", clang::tok::TokenKind::pound);
+  RuntimeSwitch.Case("r_angle", clang::tok::TokenKind::pound);
+  return RuntimeSwitch.Default(clang::tok::TokenKind::pound);
+}
+
+int main() {
+  return 0;
 }
