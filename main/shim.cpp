@@ -1,402 +1,149 @@
-// convert swift tokens to clang tokens
+// Violent X macros usage, inspired by the Swift and Clang teams.
+// This is metaprogramming anyway ;)
 
-#include "swift/Syntax/TokenSyntax.h"
-#include "clang/Basic/TokenKinds.h"
+// As they are using StringRef in their code, and I don't want to break ODR,
+// I should just make sure the compiler knows what that is. This is a workaround, though.
+#include "llvm/ADT/StringRef.h"
+using namespace llvm;
+// this defines the Swift token enum
+#include "swift/Syntax/TokenKinds.h"
 
-clang::tok::TokenKind shim(swift::tok kind) {
-  switch (kind) {
-  case swift::tok::kw_return:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_class:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_associatedtype:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_deinit:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_enum:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_extension:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_func:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_import:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_init:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_inout:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_let:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_operator:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_precedencegroup:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_protocol:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_struct:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_subscript:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_typealias:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_var:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_fileprivate:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_internal:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_private:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_public:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_static:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_defer:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_if:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_guard:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_do:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_repeat:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_else:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_for:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_in:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_while:
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_break:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_continue:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_switch:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_case:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_default:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_where:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_fallthrough:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_catch:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_throw:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_as:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_Any:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_false:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_is:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_nil:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_rethrows:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_super:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_self:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_Self:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_true:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_try:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_throws:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw___FILE__:
-    // fake
-    return clang::tok::TokenKind::kw___FUNCTION__;
-  case swift::tok::kw___COLUMN__:
-    // fake
-    return clang::tok::TokenKind::kw___FUNCTION__;
-  case swift::tok::kw___FUNCTION__:
-    return clang::tok::TokenKind::kw___FUNCTION__;
-  case swift::tok::kw___LINE__:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw___DSO_HANDLE__:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw__:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::l_paren:
-    return clang::tok::TokenKind::l_paren;
-  case swift::tok::r_paren:
-    return clang::tok::TokenKind::r_paren;
-  case swift::tok::l_brace:
-    return clang::tok::TokenKind::l_brace;
-  case swift::tok::r_brace:
-    return clang::tok::TokenKind::r_brace;
-  case swift::tok::l_square:
-    return clang::tok::TokenKind::l_square;
-  case swift::tok::r_square:
-    return clang::tok::TokenKind::r_square;
-  case swift::tok::l_angle:
-    return clang::tok::TokenKind::less;
-  case swift::tok::r_angle:
-    return clang::tok::TokenKind::greater;
-  case swift::tok::period:
-    return clang::tok::TokenKind::period;
-  case swift::tok::period_prefix:
-    // fake
-    return clang::tok::TokenKind::identifier;
-  case swift::tok::comma:
-    return clang::tok::TokenKind::comma;
-  case swift::tok::ellipsis:
-    return clang::tok::TokenKind::ellipsis;
-  case swift::tok::colon:
-    return clang::tok::TokenKind::colon;
-  case swift::tok::semi:
-    return clang::tok::TokenKind::semi;
-  case swift::tok::equal:
-    return clang::tok::TokenKind::equal;
-  case swift::tok::at_sign:
-    return clang::tok::TokenKind::at;
-  case swift::tok::pound:
-    return clang::tok::TokenKind::hash;
-  case swift::tok::amp_prefix:
-    // fake
-    return clang::tok::TokenKind::identifier;
-  case swift::tok::arrow:
-    return clang::tok::TokenKind::arrow;
-  case swift::tok::backtick:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::backslash:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::exclaim_postfix:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::question_postfix:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::question_infix:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::string_quote:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::single_quote:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::multiline_string_quote:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_keyPath:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_line:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_selector:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_file:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_fileID:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_filePath:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_column:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_function:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_dsohandle:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_assert:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_sourceLocation:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_warning:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_error:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_if:
-    return clang::tok::TokenKind::kw_if;
-  case swift::tok::pound_else:
-    return clang::tok::TokenKind::kw_else;
-  case swift::tok::pound_elseif:
-    // return swift::tok::TokenKind::kw_elseif;
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_endif:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_available:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_fileLiteral:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_imageLiteral:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::pound_colorLiteral:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::integer_literal:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::floating_literal:
-    return clang::tok::TokenKind::numeric_constant;
-  case swift::tok::string_literal:
-    return clang::tok::TokenKind::string_literal;
-  case swift::tok::unknown:
-    return clang::tok::TokenKind::unknown;
-  case swift::tok::identifier:
-    return clang::tok::TokenKind::identifier;
-  case swift::tok::oper_binary_unspaced:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::oper_binary_spaced:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::oper_postfix:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::oper_prefix:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::dollarident:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::contextual_keyword:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::raw_string_delimiter:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::string_segment:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::string_interpolation_anchor:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_yield:
-    // fake
-    return clang::tok::TokenKind::kw_while;    
-  case swift::tok::kw_undef:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_stage:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_property:
-    // fake
-    return clang::tok::TokenKind::kw_while;   
-  case swift::tok::kw_sil_vtable:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_global:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_witness_table:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_default_witness_table:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_differentiability_witness:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_coverage_map:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::kw_sil_scope:
-    // fake
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::sil_dollar:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::sil_exclamation:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::eof:
-    return clang::tok::TokenKind::eof;
-  case swift::tok::code_complete:
-    return clang::tok::TokenKind::code_completion;
-  case swift::tok::sil_local_name:
-    // FAKE
-    return clang::tok::TokenKind::kw_while;
-  case swift::tok::comment:
-    return clang::tok::TokenKind::comment;
-  case swift::tok::NUM_TOKENS:
-    return clang::tok::TokenKind::NUM_TOKENS;
-    }
-  return clang::tok::TokenKind::l_paren;
+// But we will have to redefine Clang Tokens
+// #include "clang/Basic/TokenKinds.h"
+
+#include "llvm/ADT/StringSwitch.h"
+#include <iostream>
+
+// hijack TokenKind
+namespace clang {
+  namespace tok {
+    enum TokenKind: unsigned short {
+#define TOK(X) X,
+				    // part of the tokens is already in clang
+#include "clang/Basic/TokenKinds.def"
+#undef TOK
+				    // And those that are specific to Swift have to be translated
+				    // verbatium
+				    // What is marked with CTO is for compile time only
+				    // which means that these tokens will be remapped thanks to
+				    // the RuntimeSwitch below
+				    kw_repeat,
+				    kw_in,
+				    kw_fallthrough,
+				    kw_where,
+				    kw_as,
+				    kw_Any,
+				    kw_is,
+				    kw_nil,
+				    kw_rethrows,
+				    kw_super,
+				    kw_self,
+				    kw_Self,
+				    kw_throws,
+				    kw___FILE__,
+				    kw___LINE__,
+				    kw___COLUMN__,
+				    kw___DSO_HANDLE__,
+				    kw__,
+				    // CTO
+				    l_angle,
+				    // CTO
+				    r_angle,
+				    period_prefix,
+				    at_sign,
+				    pound,
+				    amp_prefix,
+				    backtick,
+				    backslash,
+				    exclaim_postfix,
+				    question_postfix,
+				    question_infix,
+				    string_quote,
+				    single_quote,
+				    multiline_string_quote,
+				    pound_keyPath,
+				    pound_line,
+				    pound_selector,
+				    pound_file,
+				    pound_fileID,
+				    pound_filePath,
+				    pound_column,
+				    pound_function,
+				    pound_dsohandle,
+				    pound_assert,
+				    pound_sourceLocation,
+				    pound_warning,
+				    pound_error,
+				    pound_if,
+				    pound_elseif,
+				    pound_endif,
+				    pound_available,
+				    pound_fileLiteral,
+				    pound_imageLiteral,
+				    pound_colorLiteral,
+				    integer_literal,
+				    floating_literal,
+				    oper_binary_unspaced,
+				    oper_binary_spaced,
+				    oper_postfix,
+				    oper_prefix,
+				    dollarident,
+				    contextual_keyword,
+				    raw_string_delimiter,
+				    string_segment,
+				    string_interpolation_anchor,
+				    kw_yield,
+				    kw_undef,
+				    kw_sil,
+				    kw_sil_stage,
+				    kw_sil_property,
+				    kw_sil_vtable,
+				    kw_sil_global,
+				    kw_sil_witness_table,
+				    kw_sil_default_witness_table,
+				    kw_sil_differentiability_witness,
+				    kw_sil_coverage_map,
+				    kw_sil_scope,
+				    sil_dollar,
+				    sil_exclamation,
+				    code_complete,
+				    sil_local_name,
+				    pound_else,
+				    kw_guard,
+				    kw_defer,
+				    kw_internal,
+				    kw_fileprivate,
+				    kw_var,
+				    kw_typealias,
+				    kw_subscript,
+				    kw_protocol,
+				    kw_precedencegroup,
+				    kw_let,
+				    kw_inout,
+				    kw_init,
+				    kw_func,
+				    kw_extension,
+				    kw_deinit,
+				    kw_associatedtype,
+				    NUM_TOKENS
+    };
+  }
+}
+
+int main() {
+  // From the compiler's point of view, it is all good, because we do have all of
+  // the necessary tokens types in clang as we have extended them above
+  // But we won't need everything, but some of the characters have to be remapped.
+  // Which is why we use a Runtime switch with a checker built into it.
+  auto RuntimeSwitch =
+    llvm::StringSwitch<clang::tok::TokenKind>(StringRef("23"));
+  
+#define TOKEN(id)						\
+  if (strcmp(#id, "<") != 0 && strcmp(#id, ">") != 0) {		\
+    RuntimeSwitch.Case(#id, clang::tok::TokenKind::id);		\
+  }
+#include "swift/Syntax/TokenKinds.def"
+  RuntimeSwitch.Case("<", clang::tok::TokenKind::pound);
+  RuntimeSwitch.Case(">", clang::tok::TokenKind::pound);
+  clang::tok::TokenKind Kind = RuntimeSwitch.Default(clang::tok::TokenKind::pound);
 }
