@@ -24,7 +24,7 @@
 #include "swift/Parse/Token.h"
 #include "swift/Parse/ParsedTrivia.h"
 #include "llvm/ADT/SmallVector.h"
-#include "llvm/Support/SaveAndRestore.h"
+//#include "llvm/Support/SaveAndRestore.h"
 
 namespace swift {
 
@@ -276,8 +276,10 @@ public:
     assert(S.isValid());
     CurPtr = getBufferPtrForSourceLoc(S.Loc);
     // Don't reemit diagnostics while readvancing the lexer.
+    /*
     llvm::SaveAndRestore<DiagnosticEngine*>
       D(Diags, enableDiagnostics ? Diags : nullptr);
+    */
 
     lexImpl();
 

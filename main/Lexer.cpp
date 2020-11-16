@@ -17,14 +17,14 @@
 #include "swift/Parse/Confusables.h"
 // #include "swift/Parse/Lexer.h"
 #include "Lexer.h"
-#include "swift/AST/DiagnosticsParse.h"
+// #include "swift/AST/DiagnosticsParse.h"
 #include "swift/AST/Identifier.h"
 #include "swift/Basic/LangOptions.h"
 #include "swift/Basic/SourceManager.h"
 #include "swift/Syntax/Trivia.h"
-#include "llvm/Support/Compiler.h"
-#include "llvm/Support/MathExtras.h"
-#include "llvm/Support/MemoryBuffer.h"
+// #include "llvm/Support/Compiler.h"
+//#include "llvm/Support/MathExtras.h"
+//#include "llvm/Support/MemoryBuffer.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringSwitch.h"
 #include "llvm/ADT/Twine.h"
@@ -372,8 +372,10 @@ static void diagnoseEmbeddedNul(DiagnosticEngine *Diags, const char *Ptr) {
 
   SourceLoc NulLoc = Lexer::getSourceLoc(Ptr);
   SourceLoc NulEndLoc = Lexer::getSourceLoc(Ptr+1);
+  /*
   Diags->diagnose(NulLoc, diag::lex_nul_character)
       .fixItRemoveChars(NulLoc, NulEndLoc);
+  */
 }
 
 /// Advance \p CurPtr to the end of line or the end of file. Returns \c true
@@ -392,9 +394,6 @@ static bool advanceToEndOfLine(const char *&CurPtr, const char *BufferEnd,
       if (Diags && (signed char)(CurPtr[-1]) < 0) {
         --CurPtr;
         const char *CharStart = CurPtr;
-        if (validateUTF8CharacterAndAdvance(CurPtr, BufferEnd) == ~0U)
-          Diags->diagnose(Lexer::getSourceLoc(CharStart),
-                          diag::lex_invalid_utf8);
       }
       break;   // Otherwise, eat other characters.
     case 0:
@@ -474,9 +473,6 @@ static bool skipToEndOfSlashStarComment(const char *&CurPtr,
       if (Diags && (signed char)(CurPtr[-1]) < 0) {
         --CurPtr;
         const char *CharStart = CurPtr;
-        if (validateUTF8CharacterAndAdvance(CurPtr, BufferEnd) == ~0U)
-          Diags->diagnose(Lexer::getSourceLoc(CharStart),
-                          diag::lex_invalid_utf8);
       }
 
       break;   // Otherwise, eat other characters.
@@ -498,11 +494,13 @@ static bool skipToEndOfSlashStarComment(const char *&CurPtr,
         while (--Depth != 0)
           Terminator += "*/";
         const char *EOL = (CurPtr[-1] == '\n') ? (CurPtr - 1) : CurPtr;
+	/*
         Diags
             ->diagnose(Lexer::getSourceLoc(EOL),
                        diag::lex_unterminated_block_comment)
             .fixItInsert(Lexer::getSourceLoc(EOL), Terminator);
         Diags->diagnose(Lexer::getSourceLoc(StartPtr), diag::lex_comment_start);
+	*/
       }
       return isMultiline;
     }
@@ -833,11 +831,13 @@ void Lexer::lexOperatorIdentifier() {
     case '=':
       // Refrain from emitting this message in operator name position.
       if (NextToken.isNot(tok::kw_operator) && leftBound != rightBound) {
+	/*
         auto d = diagnose(TokStart, diag::lex_unary_equal);
         if (leftBound)
           d.fixItInsert(getSourceLoc(TokStart), " ");
         else
           d.fixItInsert(getSourceLoc(TokStart+1), " ");
+	*/
       }
       // always emit 'tok::equal' to avoid trickle down parse errors
       return formToken(tok::equal, TokStart);
@@ -863,7 +863,7 @@ void Lexer::lexOperatorIdentifier() {
       // a tok::period, since that is what the user is wanting to know about.
       if (*AfterHorzWhitespace == '\0' &&
           AfterHorzWhitespace == CodeCompletionPtr) {
-        diagnose(TokStart, diag::expected_member_name);
+        //diagnose(TokStart, diag::expected_member_name);
         return formToken(tok::period, TokStart);
       }
 
@@ -872,14 +872,16 @@ void Lexer::lexOperatorIdentifier() {
           // either // or /* and most likely occurs just in our testsuite for
           // expected-error lines.
           *AfterHorzWhitespace != '/') {
+	/*
         diagnose(TokStart, diag::extra_whitespace_period)
           .fixItRemoveChars(getSourceLoc(CurPtr),
                             getSourceLoc(AfterHorzWhitespace));
+	*/
         return formToken(tok::period, TokStart);
       }
 
       // Otherwise, it is probably a missing member.
-      diagnose(TokStart, diag::expected_member_name);
+      // diagnose(TokStart, diag::expected_member_name);
       return formToken(tok::unknown, TokStart);
     }
     case '?':
@@ -892,7 +894,7 @@ void Lexer::lexOperatorIdentifier() {
     case ('-' << 8) | '>': // ->
       return formToken(tok::arrow, TokStart);
     case ('*' << 8) | '/': // */
-      diagnose(TokStart, diag::lex_unexpected_block_comment_end);
+      // diagnose(TokStart, diag::lex_unexpected_block_comment_end);
       return formToken(tok::unknown, TokStart);
     }
   } else {
@@ -900,7 +902,7 @@ void Lexer::lexOperatorIdentifier() {
     // it as potentially ending a block comment.
     auto Pos = StringRef(TokStart, CurPtr-TokStart).find("*/");
     if (Pos != StringRef::npos) {
-      diagnose(TokStart+Pos, diag::lex_unexpected_block_comment_end);
+      // diagnose(TokStart+Pos, diag::lex_unexpected_block_comment_end);
       return formToken(tok::unknown, TokStart);
     }
   }
@@ -936,8 +938,10 @@ void Lexer::lexDollarIdent() {
 
   if (CurPtr == tokStart + 1) {
     // It is an error to see a standalone '$'. Offer to replace '$' with '`$`'.
+    /*
     diagnose(tokStart, diag::standalone_dollar_identifier)
       .fixItReplaceChars(getSourceLoc(tokStart), getSourceLoc(CurPtr), "`$`");
+    */
     return formToken(tok::identifier, tokStart);
   }
 
@@ -962,8 +966,10 @@ void Lexer::lexHexNumber() {
   };
 
   auto expected_hex_digit = [&](const char *loc) {
+			      /*
     diagnose(loc, diag::lex_invalid_digit_in_int_literal, StringRef(loc, 1),
              (unsigned)ExpectedDigitKind::Hex);
+			      */
     return expected_digit();
   };
 
@@ -1006,7 +1012,7 @@ void Lexer::lexHexNumber() {
         CurPtr = PtrOnDot;
         return formToken(tok::integer_literal, TokStart);
       }
-      diagnose(CurPtr, diag::lex_expected_binary_exponent_in_hex_float_literal);
+      // diagnose(CurPtr, diag::lex_expected_binary_exponent_in_hex_float_literal);
       return formToken(tok::unknown, TokStart);
     }
   }
@@ -1033,12 +1039,6 @@ void Lexer::lexHexNumber() {
     // identifier (invalid character), underscore (invalid first character),
     // non-identifier (empty exponent)
     auto tmp = CurPtr;
-    if (advanceIfValidContinuationOfIdentifier(CurPtr, BufferEnd))
-      diagnose(tmp, diag::lex_invalid_digit_in_fp_exponent, StringRef(tmp, 1),
-               *tmp == '_');
-    else
-      diagnose(CurPtr, diag::lex_expected_digit_in_fp_exponent);
-
     return expected_digit();
   }
 
@@ -1047,8 +1047,10 @@ void Lexer::lexHexNumber() {
 
   auto tmp = CurPtr;
   if (advanceIfValidContinuationOfIdentifier(CurPtr, BufferEnd)) {
+    /*
     diagnose(tmp, diag::lex_invalid_digit_in_fp_exponent, StringRef(tmp, 1),
              false);
+    */
     return expected_digit();
   }
 
@@ -1075,8 +1077,10 @@ void Lexer::lexNumber() {
   };
 
   auto expected_int_digit = [&](const char *loc, ExpectedDigitKind kind) {
+			      /*
     diagnose(loc, diag::lex_invalid_digit_in_int_literal, StringRef(loc, 1),
              (unsigned)kind);
+			      */
     return expected_digit();
   };
 
@@ -1158,11 +1162,6 @@ void Lexer::lexNumber() {
       // identifier (invalid character), underscore (invalid first character),
       // non-identifier (empty exponent)
       auto tmp = CurPtr;
-      if (advanceIfValidContinuationOfIdentifier(CurPtr, BufferEnd))
-        diagnose(tmp, diag::lex_invalid_digit_in_fp_exponent, StringRef(tmp, 1),
-                 *tmp == '_');
-      else
-        diagnose(CurPtr, diag::lex_expected_digit_in_fp_exponent);
 
       return expected_digit();
     }
@@ -1172,8 +1171,10 @@ void Lexer::lexNumber() {
 
     auto tmp = CurPtr;
     if (advanceIfValidContinuationOfIdentifier(CurPtr, BufferEnd)) {
+      /*
       diagnose(tmp, diag::lex_invalid_digit_in_fp_exponent, StringRef(tmp, 1),
                false);
+      */
       return expected_digit();
     }
   }
@@ -1194,15 +1195,19 @@ unsigned Lexer::lexUnicodeEscape(const char *&CurPtr, Lexer *Diags) {
     ++CurPtr;
 
   if (CurPtr[0] != '}') {
+    /*
     if (Diags)
       Diags->diagnose(CurPtr, diag::lex_invalid_u_escape_rbrace);
+    */
     return ~1U;
   }
   ++CurPtr;
 
   if (NumDigits < 1 || NumDigits > 8) {
+    /*
     if (Diags)
       Diags->diagnose(CurPtr, diag::lex_invalid_u_escape);
+    */
     return ~1U;
   }
 
@@ -1293,11 +1298,13 @@ static bool delimiterMatches(unsigned CustomDelimiterLen, const char *&BytesPtr,
   BytesPtr += CustomDelimiterLen;
 
   if (Diags && TmpPtr > BytesPtr) {
+    /*
     Diag<> message = IsClosing ? diag::lex_invalid_closing_delimiter
                                : diag::lex_invalid_escape_delimiter;
     Diags->diagnose(Lexer::getSourceLoc(BytesPtr), message)
         .fixItRemoveChars(Lexer::getSourceLoc(BytesPtr),
                           Lexer::getSourceLoc(TmpPtr));
+    */
   }
   return true;
 }
@@ -1323,14 +1330,14 @@ unsigned Lexer::lexCharacter(const char *&CurPtr, char StopQuote,
       if (isPrintable(CurPtr[-1]) == 0)
         if (!(IsMultilineString && (CurPtr[-1] == '\t')))
           if (EmitDiagnostics)
-            diagnose(CharStart, diag::lex_unprintable_ascii_character);
+            // diagnose(CharStart, diag::lex_unprintable_ascii_character);
       return CurPtr[-1];
     }
     --CurPtr;
     unsigned CharValue = validateUTF8CharacterAndAdvance(CurPtr, BufferEnd);
     if (CharValue != ~0U) return CharValue;
     if (EmitDiagnostics)
-      diagnose(CharStart, diag::lex_invalid_utf8);
+      // diagnose(CharStart, diag::lex_invalid_utf8);
     return ~1U;
   }
   case '"':
@@ -1357,8 +1364,6 @@ unsigned Lexer::lexCharacter(const char *&CurPtr, char StopQuote,
 
   case 0:
     assert(CurPtr - 1 != BufferEnd && "Caller must handle EOF");
-    if (EmitDiagnostics)
-      diagnose(CurPtr-1, diag::lex_nul_character);
     return CurPtr[-1];
   case '\n':  // String literals cannot have \n or \r in them.
   case '\r':
@@ -1380,7 +1385,7 @@ unsigned Lexer::lexCharacter(const char *&CurPtr, char StopQuote,
     LLVM_FALLTHROUGH;
   default:  // Invalid escape.
     if (EmitDiagnostics)
-      diagnose(CurPtr, diag::lex_invalid_escape);
+      // diagnose(CurPtr, diag::lex_invalid_escape);
     // If this looks like a plausible escape character, recover as though this
     // is an invalid escape.
     if (isAlphanumeric(*CurPtr)) ++CurPtr;
@@ -1399,7 +1404,7 @@ unsigned Lexer::lexCharacter(const char *&CurPtr, char StopQuote,
     ++CurPtr;
     if (*CurPtr != '{') {
       if (EmitDiagnostics)
-        diagnose(CurPtr-1, diag::lex_unicode_escape_braces);
+        // diagnose(CurPtr-1, diag::lex_unicode_escape_braces);
       return ~1U;
     }
 
@@ -1413,7 +1418,7 @@ unsigned Lexer::lexCharacter(const char *&CurPtr, char StopQuote,
   llvm::SmallString<64> TempString;
   if (CharValue >= 0x80 && EncodeToUTF8(CharValue, TempString)) {
     if (EmitDiagnostics)
-      diagnose(CharStart, diag::lex_invalid_unicode_scalar);
+      // diagnose(CharStart, diag::lex_invalid_unicode_scalar);
     return ~1U;
   }
 
@@ -1629,9 +1634,6 @@ getMultilineTrailingIndent(StringRef Bytes, DiagnosticEngine *Diags = nullptr,
           auto escapeLoc = Lexer::getSourceLoc(Ptr);
           bool invalid = true;
           while (*--Ptr == '\\') invalid = !invalid;
-          if (invalid)
-            Diags->diagnose(escapeLoc, diag::lex_escaped_newline_at_lastline)
-              .fixItRemoveChars(escapeLoc, Lexer::getSourceLoc(LineEnd));
         }
       }
 
@@ -1644,9 +1646,10 @@ getMultilineTrailingIndent(StringRef Bytes, DiagnosticEngine *Diags = nullptr,
 
   if (sawNonWhitespace && Diags) {
     auto loc = Lexer::getSourceLoc(start + 1);
-    Diags->diagnose(loc, diag::lex_illegal_multiline_string_end)
+    /*Diags->diagnose(loc, diag::lex_illegal_multiline_string_end)
     // FIXME: Should try to suggest indentation.
       .fixItInsert(loc, "\n");
+    */
   }
 
   return "";
@@ -1685,6 +1688,7 @@ static void diagnoseInvalidMultilineIndents(
     }
   };
 
+  /*
   Diags->diagnose(getLoc(LineStarts[0] + MistakeOffset),
                   diag::lex_multiline_string_indent_inconsistent,
                   LineStarts.size() != 1, LineStarts.size(),
@@ -1693,20 +1697,15 @@ static void diagnoseInvalidMultilineIndents(
   Diags->diagnose(IndentLoc.getAdvancedLoc(MistakeOffset),
                   diag::lex_multiline_string_indent_should_match_here,
                   classify(ExpectedIndent[MistakeOffset]));
-
+  */
+  /*
   auto fix = Diags->diagnose(getLoc(LineStarts[0] + MistakeOffset),
                              diag::lex_multiline_string_indent_change_line,
                              LineStarts.size() != 1);
-
+  */
   assert(MistakeOffset <= ActualIndent.size());
   assert(ExpectedIndent.substr(0, MistakeOffset) ==
          ActualIndent.substr(0, MistakeOffset));
-
-  for (auto line : LineStarts) {
-    fix.fixItReplaceChars(getLoc(line + MistakeOffset),
-                          getLoc(line + ActualIndent.size()),
-                          ExpectedIndent.substr(MistakeOffset));
-  }
 }
 
 /// validateMultilineIndents:
@@ -1812,9 +1811,11 @@ static void diagnoseSingleQuoteStringLiteral(const char *TokStart,
   replacement.append(OutputPtr, Ptr - 1);
   replacement.push_back('"');
 
+  /*
   D->diagnose(Lexer::getSourceLoc(TokStart), diag::lex_single_quote_string)
       .fixItReplaceChars(Lexer::getSourceLoc(TokStart),
                          Lexer::getSourceLoc(TokEnd), replacement);
+  */
 }
 
 /// lexStringLiteral:
@@ -1830,9 +1831,11 @@ void Lexer::lexStringLiteral(unsigned CustomDelimiterLen) {
   assert((QuoteChar == '"' || QuoteChar == '\'') && "Unexpected start");
 
   bool IsMultilineString = advanceIfMultilineDelimiter(CurPtr, Diags);
+  /*
   if (IsMultilineString && *CurPtr != '\n' && *CurPtr != '\r')
     diagnose(CurPtr, diag::lex_illegal_multiline_string_start)
         .fixItInsert(Lexer::getSourceLoc(CurPtr), "\n");
+  */
 
   bool wasErroneous = false;
   while (true) {
@@ -1851,11 +1854,11 @@ void Lexer::lexStringLiteral(unsigned CustomDelimiterLen) {
       } else if ((*CurPtr == '\r' || *CurPtr == '\n') && IsMultilineString) {
         // The only case we reach here is unterminated single line string in the
         // interpolation. For better recovery, go on after emitting an error.
-        diagnose(CurPtr, diag::lex_unterminated_string);
+        // diagnose(CurPtr, diag::lex_unterminated_string);
         wasErroneous = true;
         continue;
       } else {
-        diagnose(TokStart, diag::lex_unterminated_string);
+        // diagnose(TokStart, diag::lex_unterminated_string);
         return formToken(tok::unknown, TokStart);
       }
     }
@@ -1863,7 +1866,7 @@ void Lexer::lexStringLiteral(unsigned CustomDelimiterLen) {
     // String literals cannot have \n or \r in them (unless multiline).
     if (((*CurPtr == '\r' || *CurPtr == '\n') && !IsMultilineString)
         || CurPtr == BufferEnd) {
-      diagnose(TokStart, diag::lex_unterminated_string);
+      // diagnose(TokStart, diag::lex_unterminated_string);
       return formToken(tok::unknown, TokStart);
     }
 
@@ -1923,9 +1926,11 @@ const char *Lexer::findEndOfCurlyQuoteStringLiteral(const char *Body,
     // an opening curly quote) diagnose it with a fixit and then return.
     if (CharValue == 0x0000201D) {
       if (EmitDiagnostics) {
+	/*
         diagnose(CharStart, diag::lex_invalid_curly_quote)
             .fixItReplaceChars(getSourceLoc(CharStart), getSourceLoc(Body),
                                "\"");
+	*/
       }
       return Body;
     }
@@ -2011,7 +2016,7 @@ bool Lexer::tryLexConflictMarker(bool EatNewline) {
                                         : ConflictMarkerKind::Perforce;
   if (const char *End = findConflictEnd(Ptr, BufferEnd, Kind)) {
     // Diagnose at the conflict marker, then jump ahead to the end.
-    diagnose(CurPtr, diag::lex_conflict_marker_in_file);
+    // diagnose(CurPtr, diag::lex_conflict_marker_in_file);
     CurPtr = End;
 
     // Skip ahead to the end of the marker.
@@ -2032,7 +2037,7 @@ bool Lexer::lexUnknown(bool EmitDiagnosticsIfToken) {
     // If this is a valid identifier continuation, but not a valid identifier
     // start, attempt to recover by eating more continuation characters.
     if (EmitDiagnosticsIfToken) {
-      diagnose(CurPtr - 1, diag::lex_invalid_identifier_start_character);
+      // diagnose(CurPtr - 1, diag::lex_invalid_identifier_start_character);
     }
     while (advanceIfValidContinuationOfIdentifier(Tmp, BufferEnd))
       ;
@@ -2043,8 +2048,10 @@ bool Lexer::lexUnknown(bool EmitDiagnosticsIfToken) {
   // This character isn't allowed in Swift source.
   uint32_t Codepoint = validateUTF8CharacterAndAdvance(Tmp, BufferEnd);
   if (Codepoint == ~0U) {
+    /*
     diagnose(CurPtr - 1, diag::lex_invalid_utf8)
         .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(Tmp), " ");
+    */
     CurPtr = Tmp;
     return false; // Skip presumed whitespace.
   } else if (Codepoint == 0x000000A0) {
@@ -2053,16 +2060,20 @@ bool Lexer::lexUnknown(bool EmitDiagnosticsIfToken) {
         Tmp += 2;
       SmallString<8> Spaces;
       Spaces.assign((Tmp - CurPtr + 1) / 2, ' ');
+      /*
       diagnose(CurPtr - 1, diag::lex_nonbreaking_space)
           .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(Tmp),
                              Spaces);
+      */
       CurPtr = Tmp;
       return false;
   } else if (Codepoint == 0x0000201D) {
     // If this is an end curly quote, just diagnose it with a fixit hint.
     if (EmitDiagnosticsIfToken) {
+      /*
       diagnose(CurPtr - 1, diag::lex_invalid_curly_quote)
           .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(Tmp), "\"");
+      */
     }
     CurPtr = Tmp;
     return true;
@@ -2080,16 +2091,20 @@ bool Lexer::lexUnknown(bool EmitDiagnosticsIfToken) {
     // diagnose an end curly quote in the middle of a straight quoted
     // literal.
     if (EmitDiagnosticsIfToken) {
+      /*
       diagnose(CurPtr - 1, diag::lex_invalid_curly_quote)
           .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(EndPtr),
                              "\"");
+      */
     }
     CurPtr = Tmp;
     return true;
   }
 
+  /*
   diagnose(CurPtr - 1, diag::lex_invalid_character)
       .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(Tmp), " ");
+  */
 
   char ExpectedCodepoint;
   if ((ExpectedCodepoint =
@@ -2099,10 +2114,12 @@ bool Lexer::lexUnknown(bool EmitDiagnosticsIfToken) {
     EncodeToUTF8(Codepoint, ConfusedChar);
     llvm::SmallString<1> ExpectedChar;
     ExpectedChar += ExpectedCodepoint;
+    /*
     diagnose(CurPtr - 1, diag::lex_confusable_character, ConfusedChar,
              ExpectedChar)
         .fixItReplaceChars(getSourceLoc(CurPtr - 1), getSourceLoc(Tmp),
                            ExpectedChar);
+    */
   }
 
   CurPtr = Tmp;
@@ -2132,9 +2149,9 @@ void Lexer::tryLexEditorPlaceholder() {
       // Found it. Flag it as error (or warning, if in playground mode) for the
       // rest of the compiler pipeline and lex it as an identifier.
       if (LangOpts.Playground) {
-        diagnose(TokStart, diag::lex_editor_placeholder_in_playground);
+        // diagnose(TokStart, diag::lex_editor_placeholder_in_playground);
       } else {
-        diagnose(TokStart, diag::lex_editor_placeholder);
+        // diagnose(TokStart, diag::lex_editor_placeholder);
       }
       CurPtr = Ptr+2;
       formToken(tok::identifier, TokStart);
@@ -2367,7 +2384,7 @@ void Lexer::lexImpl() {
 
   case -1:
   case -2:
-    diagnose(CurPtr-1, diag::lex_utf16_bom_marker);
+    // diagnose(CurPtr-1, diag::lex_utf16_bom_marker);
     CurPtr = BufferEnd;
     return formToken(tok::unknown, TokStart);
 
@@ -2572,7 +2589,7 @@ Restart:
       // Hashbang '#!/path/to/swift'.
       --CurPtr;
       if (!IsHashbangAllowed)
-        diagnose(TriviaStart, diag::lex_hashbang_not_allowed);
+        // diagnose(TriviaStart, diag::lex_hashbang_not_allowed);
       skipHashbang(/*EatNewline=*/false);
       size_t Length = CurPtr - TriviaStart;
       Pieces.push_back(TriviaKind::GarbageText, Length);
