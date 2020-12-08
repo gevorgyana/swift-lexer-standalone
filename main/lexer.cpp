@@ -10,11 +10,13 @@
 #include <iostream>
 
 /**
+ * Here, we need to esace manually whitespace and other stuff like \v \t
+ * Code inspired by what I did in the swift fork
  * Takes the token from a const char* and retrieves a Token in clang form. See
  * the shim.cpp for how it is done.
  **/
 
-__attribute__((noinline)) size_t get_me_some_swift_lexeme(const char* source, clang::tok::TokenKind& Result) {
+__attribute__((noinline)) size_t get_me_some_swift_lexeme(const char* source, clang::tok::TokenKind& Result, size_t &offset) {
 
   auto copy = source;
 
@@ -49,6 +51,7 @@ __attribute__((noinline)) size_t get_me_some_swift_lexeme(const char* source, cl
   L.lex(Tok, LeadingTrivia, TrailingTrivia);
   auto in_clang_terms = shim(Tok.getKind());
   Result = in_clang_terms;
+  offset += Tok.getText().size();
   return Tok.getText().size();
 }
 
@@ -73,32 +76,14 @@ int main() {
       (std::istreambuf_iterator<char>())
   );
   std::cout << contents << std::endl;
-  swift::LexerMode lexMode;
-  swift::SourceManager SM;
-  swift::Lexer L(
-      langOpts,
-      SM,
-      contents,
-      lexMode
-  );
-  swift::Token Tok;
-  swift::ParsedTrivia LeadingTrivia, TrailingTrivia;
 
+  size_t offset = 0;
+  clang::tok::TokenKind in_clang_terms;
   do {
-
-    // Here, we need to esace manually whitespace and other stuff like \v \t
-    // Code inspired by what I did in the swift fork
-
-    // Small amounts of horizontal whitespace is very common between tokens.
-    /*
-    */
-
-    L.lex(Tok, LeadingTrivia, TrailingTrivia);
-    auto in_clang_terms = shim(Tok.getKind());
-
+    auto token_length = get_me_some_swift_lexeme(contents.c_str() + offset, in_clang_terms, offset);
     std::cout <<
-      CLANG_TOKEN_STRING_REPR[in_clang_terms] << " " << Tok.getText().size() << std::endl;
+      CLANG_TOKEN_STRING_REPR[in_clang_terms] << " " << token_length << std::endl;
 
-  } while (Tok.getKind() != swift::tok::eof);
+  } while (in_clang_terms != clang::tok::TokenKind::eof);
   return 0;
 }

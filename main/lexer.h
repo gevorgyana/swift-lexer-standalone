@@ -7,4 +7,4 @@
 #include <string>
 #include <iostream>
 
-size_t get_me_some_swift_lexeme(const char* source, clang::tok::TokenKind& Result);
+size_t get_me_some_swift_lexeme(const char* source, clang::tok::TokenKind& Result, size_t &offset);
