@@ -9,7 +9,29 @@
 #include <string>
 #include <iostream>
 
+/**
+ * Takes the token from a const char* and retrieves a Token in clang form. See
+ * the shim.cpp for how it is done.
+ **/
+
 __attribute__((noinline)) size_t get_me_some_swift_lexeme(const char* source, clang::tok::TokenKind& Result) {
+
+  auto copy = source;
+
+  if (*copy == '\n') {
+    std::cout << "NEWLINE" << std::endl;
+  }
+
+  if ((*copy == ' ') || (*copy == '\t')) {
+    ++copy;
+    while ((*copy == ' ') || (*copy == '\t'))
+      ++copy;
+  }
+
+  if (copy - source > 0) {
+    std::cout << "SPACES: " << copy - source << std::endl;
+  }
+
   swift::LangOptions langOpts;
   std::string contents(source);
   // std::cout << contents << std::endl;
@@ -30,19 +52,18 @@ __attribute__((noinline)) size_t get_me_some_swift_lexeme(const char* source, cl
   return Tok.getText().size();
 }
 
+/**
+ * Tokenize the whole file into "results.lex",
+ * where each line will contain a pair of (TokenType, TokenLength)
+ * TokenType will be of type string
+ **/
 
-
-
-
-
-/*
-#include "Lexer.h"
-#include "swift/Basic/LangOptions.h"
-#include "shim.h"
-
-#include <fstream>
-#include <string>
-#include <iostream>
+#define TOK(id)					\
+  #id,
+static const char* CLANG_TOKEN_STRING_REPR[] = {
+#include "clang/Basic/TokenKinds.def"
+#undef TOKEN
+};
 
 int main() {
   swift::LangOptions langOpts;
@@ -62,10 +83,22 @@ int main() {
   );
   swift::Token Tok;
   swift::ParsedTrivia LeadingTrivia, TrailingTrivia;
+
   do {
+
+    // Here, we need to esace manually whitespace and other stuff like \v \t
+    // Code inspired by what I did in the swift fork
+
+    // Small amounts of horizontal whitespace is very common between tokens.
+    /*
+    */
+
     L.lex(Tok, LeadingTrivia, TrailingTrivia);
     auto in_clang_terms = shim(Tok.getKind());
+
+    std::cout <<
+      CLANG_TOKEN_STRING_REPR[in_clang_terms] << " " << Tok.getText().size() << std::endl;
+
   } while (Tok.getKind() != swift::tok::eof);
   return 0;
 }
-*/
